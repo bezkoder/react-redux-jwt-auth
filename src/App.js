@@ -18,6 +18,9 @@ import { clearMessage } from "./actions/message";
 
 import { history } from './helpers/history';
 
+// import AuthVerify from "./common/auth-verify";
+import EventBus from "./common/EventBus";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -44,10 +47,23 @@ class App extends Component {
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
     }
+
+    EventBus.on("logout", () => {
+      this.logOut();
+    });
+  }
+
+  componentWillUnmount() {
+    EventBus.remove("logout");
   }
 
   logOut() {
     this.props.dispatch(logout());
+    this.setState({
+      showModeratorBoard: false,
+      showAdminBoard: false,
+      currentUser: undefined,
+    });
   }
 
   render() {
@@ -133,6 +149,8 @@ class App extends Component {
               <Route path="/admin" component={BoardAdmin} />
             </Switch>
           </div>
+
+          {/* <AuthVerify logOut={this.logOut}/> */}
         </div>
       </Router>
     );
