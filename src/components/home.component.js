@@ -16,8 +16,11 @@ export default class Home extends Component {
       response => {
         this.setState({
           content: response.data
+
         });
-      },
+
+      }
+      ,
       error => {
         this.setState({
           content:

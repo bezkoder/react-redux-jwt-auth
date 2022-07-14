@@ -39,7 +39,7 @@ class App extends Component {
 
   componentDidMount() {
     const user = this.props.user;
-
+    console.log(user)
     if (user) {
       this.setState({
         currentUser: user,
@@ -74,7 +74,7 @@ class App extends Component {
         <div>
           <nav className="navbar navbar-expand navbar-dark bg-dark">
             <Link to={"/"} className="navbar-brand">
-              bezKoder
+              UserApp
             </Link>
             <div className="navbar-nav mr-auto">
               <li className="nav-item">
