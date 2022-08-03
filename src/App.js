@@ -11,7 +11,12 @@ import Home from "./components/home.component";
 import Profile from "./components/profile.component";
 import BoardUser from "./components/board-user.component";
 import BoardModerator from "./components/board-moderator.component";
+import AddTutorial from "./components/add-tutorial.component";
 import BoardAdmin from "./components/board-admin.component";
+import UserService from "../src/services/user.service"
+import TutorialsList from "./components/tutorials-list.component";
+import Tutorials from "./components/tutorial.component"
+
 
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -20,6 +25,7 @@ import { history } from './helpers/history';
 
 // import AuthVerify from "./common/auth-verify";
 import EventBus from "./common/EventBus";
+import logo from "./assets/logo.png"
 
 class App extends Component {
   constructor(props) {
@@ -39,8 +45,17 @@ class App extends Component {
 
   componentDidMount() {
     const user = this.props.user;
-    console.log(user)
+
     if (user) {
+      UserService.getUserInfo(user).then((info) => {
+        if (info) {
+          user.info = info.data.user
+          this.setState({
+            info: info.data.user
+          })
+        }
+
+      })
       this.setState({
         currentUser: user,
         showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
@@ -67,19 +82,27 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+    const { currentUser,
+      showModeratorBoard,
+      showAdminBoard, info
+    } = this.state;
 
+    console.log(this.state)
     return (
       <Router history={history}>
         <div>
-          <nav className="navbar navbar-expand navbar-dark bg-dark">
+          <nav className="navbar navbar-expand white ">
+            <div className="logo-img">
+              <img src={logo} className="logo" alt="" />
+            </div>
+
             <Link to={"/"} className="navbar-brand">
-              UserApp
+              منصة المستخدمين
             </Link>
             <div className="navbar-nav mr-auto">
               <li className="nav-item">
                 <Link to={"/home"} className="nav-link">
-                  Home
+                  الرئيسية
                 </Link>
               </li>
 
@@ -112,12 +135,12 @@ class App extends Component {
               <div className="navbar-nav ml-auto">
                 <li className="nav-item">
                   <Link to={"/profile"} className="nav-link">
-                    {currentUser.username}
+                    البطاقة الشخصية
                   </Link>
                 </li>
                 <li className="nav-item">
                   <a href="/login" className="nav-link" onClick={this.logOut}>
-                    LogOut
+                    الخروج
                   </a>
                 </li>
               </div>
@@ -125,13 +148,13 @@ class App extends Component {
               <div className="navbar-nav ml-auto">
                 <li className="nav-item">
                   <Link to={"/login"} className="nav-link">
-                    Login
+                    دخول
                   </Link>
                 </li>
 
                 <li className="nav-item">
                   <Link to={"/register"} className="nav-link">
-                    Sign Up
+                    التسجيل
                   </Link>
                 </li>
               </div>
@@ -143,10 +166,12 @@ class App extends Component {
               <Route exact path={["/", "/home"]} component={Home} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
-              <Route exact path="/profile" component={Profile} />
+              {info &&
+                <Route exact path="/profile" component={Profile} />}
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
+              {/* <Route path="/tutorials" component={Tutorials} /> */}
             </Switch>
           </div>
 
@@ -160,7 +185,7 @@ class App extends Component {
 function mapStateToProps(state) {
   const { user } = state.auth;
   return {
-    user,
+    user
   };
 }
 

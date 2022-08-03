@@ -1,6 +1,32 @@
 label {
   display: block;
   margin-top: 10px;
+  text-align: center;
+}
+
+.infos {
+  margin: 0 30px;
+}
+
+.navbar {
+  font-family: 'oswald';
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+}
+
+.logo-img {
+  max-width: auto;
+}
+
+.logo {
+  margin: 0 15px;
+  height: 4rem;
+}
+
+
+.nav-link,
+.navbar-brand {
+  color: #568f99;
+  font-weight: bold;
 }
 
 .card-container.card {
@@ -29,4 +55,10 @@ label {
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   border-radius: 50%;
+}
+
+.info-box {
+  display: flex;
+  justify-content: space-between;
+
 }

@@ -129,7 +129,7 @@ class Register extends Component {
             {!this.state.successful && (
               <div>
                 <div className="form-group">
-                  <label htmlFor="username">Username</label>
+                  <label htmlFor="username">إسم المستخدم</label>
                   <Input
                     type="text"
                     className="form-control"
@@ -141,7 +141,7 @@ class Register extends Component {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">البريد الإلكتروني</label>
                   <Input
                     type="text"
                     className="form-control"
@@ -153,7 +153,7 @@ class Register extends Component {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password">الرقم السري</label>
                   <Input
                     type="password"
                     className="form-control"
@@ -165,14 +165,14 @@ class Register extends Component {
                 </div>
 
                 <div className="form-group">
-                  <button className="btn btn-primary btn-block">Sign Up</button>
+                  <button className="btn btn-primary btn-block">تسجيل</button>
                 </div>
               </div>
             )}
 
             {message && (
               <div className="form-group">
-                <div className={ this.state.successful ? "alert alert-success" : "alert alert-danger" } role="alert">
+                <div className={this.state.successful ? "alert alert-success" : "alert alert-danger"} role="alert">
                   {message}
                 </div>
               </div>

@@ -1,7 +1,14 @@
 import React, { Component } from "react";
-
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import UserService from "../services/user.service";
 import EventBus from "../common/EventBus";
+import TutorialsList from "./tutorials-list.component";
+import Docs from "./docs.component"
+import store1 from "../store1";
+
+
+
 
 export default class BoardModerator extends Component {
   constructor(props) {
@@ -11,6 +18,7 @@ export default class BoardModerator extends Component {
       content: ""
     };
   }
+
 
   componentDidMount() {
     UserService.getModeratorBoard().then(
@@ -38,11 +46,14 @@ export default class BoardModerator extends Component {
 
   render() {
     return (
-      <div className="container">
-        <header className="jumbotron">
-          <h3>{this.state.content}</h3>
-        </header>
-      </div>
-    );
+
+
+      <Provider store={store1}>
+        <Docs />
+      </Provider>
+
+
+
+    )
   }
 }
