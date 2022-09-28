@@ -5,6 +5,7 @@ import UserService from "../services/user.service";
 export default class Home extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       content: ""
     };
@@ -32,6 +33,7 @@ export default class Home extends Component {
   }
 
   render() {
+
     return (
       <div className="container">
         <header className="jumbotron">

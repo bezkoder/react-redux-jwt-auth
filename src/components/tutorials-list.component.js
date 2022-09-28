@@ -1,11 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import http from "../http-common";
 import {
   retrieveTutorials,
   findTutorialsByTitle,
   deleteAllTutorials,
+  downloadFile
 } from "../slices/tutorials";
 import { Link } from "react-router-dom";
+import Inbox from "./inbox.component";
+import download from 'js-file-download';
+
+const user = JSON.parse(localStorage.getItem("user"))
 
 class TutorialsList extends Component {
   constructor(props) {
@@ -15,18 +21,29 @@ class TutorialsList extends Component {
     this.setActiveTutorial = this.setActiveTutorial.bind(this);
     this.findByTitle = this.findByTitle.bind(this);
     this.removeAllTutorials = this.removeAllTutorials.bind(this);
+    this.onDownload = this.onDownload.bind(this);
 
     this.state = {
       currentTutorial: null,
       currentIndex: -1,
       searchTitle: "",
+      inbox: true
     };
   }
 
   componentDidMount() {
-    this.props.retrieveTutorials();
+
+    this.props.retrieveTutorials({ data: user });
   }
 
+  onDownload(id, data) {
+    http.get(`/tutorials/file?name=${data}&id=${id}`)
+      .then(resp => {
+        console.log(resp)
+        download(resp.data, data)
+      })
+      .catch(err => console.error(err))
+  }
   onChangeSearchTitle(e) {
     const searchTitle = e.target.value;
 
@@ -53,7 +70,6 @@ class TutorialsList extends Component {
     this.props
       .deleteAllTutorials()
       .then((response) => {
-        console.log(response);
         this.refreshData();
       })
       .catch((e) => {
@@ -68,17 +84,17 @@ class TutorialsList extends Component {
   }
 
   render() {
-    const { searchTitle, currentTutorial, currentIndex } = this.state;
+    const { searchTitle, currentTutorial, currentIndex, inbox } = this.state;
     const { tutorials } = this.props;
-    console.log(this.props)
+    console.log(currentTutorial)
     return (
-      <div className="list row">
-        <div className="col-md-8">
+      <div className="list">
+        <div className="col-md-12">
           <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
-              placeholder="Search by title"
+              placeholder=" بحث بالعنوان"
               value={searchTitle}
               onChange={this.onChangeSearchTitle}
             />
@@ -88,74 +104,97 @@ class TutorialsList extends Component {
                 type="button"
                 onClick={this.findByTitle}
               >
-                Search
+                إبحث
               </button>
+
             </div>
           </div>
         </div>
-        <div className="col-md-6">
-          <h4>Tutorials List</h4>
+        <div className="row">
 
-          <ul className="list-group">
-            {tutorials &&
-              tutorials.map((tutorial, index) => (
-                <li
-                  className={
-                    "list-group-item " +
-                    (index === currentIndex ? "active" : "")
-                  }
-                  onClick={() => this.setActiveTutorial(tutorial, index)}
-                  key={index}
+
+
+          <div className="col-md-9">
+            <h4>قائمة المراسلات</h4>
+
+            <ul className="list-group">
+              {tutorials &&
+                tutorials.map((tutorial, index) => (
+                  inbox === true ? (
+                    <Inbox tutos={tutorial.inbox} currentIndex={currentIndex} setActiveTutorial={this.setActiveTutorial} />
+
+                  ) : (
+                    <Inbox tutos={tutorial.send} currentIndex={currentIndex} setActiveTutorial={this.setActiveTutorial} />
+
+                  )
+
+                ))}
+            </ul>
+
+            {/* <button
+              className="m-3 btn btn-sm btn-danger"
+              onClick={this.removeAllTutorials}
+            >
+              مسح كل المراسلات
+            </button> */}
+          </div>
+
+          <div className="col-md-3">
+            <div>
+              <li className={"list-group-item "}>مراسلة جديدة</li>
+            </div>
+            <ul className="list-group">
+              <li className={"list-group-item "}
+                onClick={() => this.setState({ inbox: true, currentTutorial: null, currentIndex: -1 })}>البريد الوارد</li>
+              <li className={"list-group-item "}
+                onClick={() => this.setState({ inbox: false, currentTutorial: null, currentIndex: -1 })}>البريد الصادر</li>
+            </ul>
+          </div>
+          <div className="col-md-7">
+            {currentTutorial ? (
+              <div>
+                <a href="#download" type="button" value="download"
+                  onClick={this.onDownload(user.id, currentTutorial.fileLink)}>Download</a>
+                <h4>تفاصيل المراسلة</h4>
+                <div>
+                  <strong>المرسل إليه : </strong>{" "}{currentTutorial.sentTo}
+                </div>
+                <div>
+                  <strong>المراسلة رقم : </strong>{" "}{currentTutorial.docNumb}
+                  المؤرخة في : {" "} {currentTutorial.docDate}
+                </div>
+                <div>
+                  <strong>العنوان:</strong>{" "}{currentTutorial.title}
+                </div>
+                <div>
+                  <strong>المضمون:</strong>{" "}{currentTutorial.description}
+                </div>
+                <div>
+                  <strong>Status:</strong>{" "}{currentTutorial.published ? "Published" : "Pending"}
+                </div>
+
+
+
+                <Link
+                  to={"/tutorials/" + currentTutorial._id}
+                  className="badge badge-warning"
                 >
-                  {tutorial.title}
-                </li>
-              ))}
-          </ul>
+                  Edit
+                </Link>
 
-          <button
-            className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllTutorials}
-          >
-            Remove All
-          </button>
-        </div>
-        <div className="col-md-6">
-          {currentTutorial ? (
-            <div>
-              <h4>Tutorial</h4>
-              <div>
-                <label>
-                  <strong>Title:</strong>
-                </label>{" "}
-                {currentTutorial.title}
-              </div>
-              <div>
-                <label>
-                  <strong>Description:</strong>
-                </label>{" "}
-                {currentTutorial.description}
-              </div>
-              <div>
-                <label>
-                  <strong>Status:</strong>
-                </label>{" "}
-                {currentTutorial.published ? "Published" : "Pending"}
+
               </div>
 
-              <Link
-                to={"/tutorials/" + currentTutorial.id}
-                className="badge badge-warning"
-              >
-                Edit
-              </Link>
-            </div>
-          ) : (
-            <div>
-              <br />
-              <p>Please click on a Tutorial...</p>
-            </div>
-          )}
+            ) : (
+              <div>
+
+                <br />
+                <p>Please click on a Tutorial...</p>
+              </div>
+            )}
+          </div>
         </div>
+
       </div>
     );
   }
@@ -164,7 +203,7 @@ class TutorialsList extends Component {
 const mapStateToProps = (state) => {
   console.log(state)
   return {
-    tutorials: state.tutorials,
+    tutorials: state.reducer,
   };
 };
 
@@ -172,4 +211,5 @@ export default connect(mapStateToProps, {
   retrieveTutorials,
   findTutorialsByTitle,
   deleteAllTutorials,
+  downloadFile
 })(TutorialsList);

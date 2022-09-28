@@ -71,6 +71,7 @@ class Login extends Component {
         loading: false,
       });
     }
+
   }
 
   render() {
@@ -154,6 +155,7 @@ class Login extends Component {
 function mapStateToProps(state) {
   const { isLoggedIn } = state.auth;
   const { message } = state.message;
+  console.log(state)
   return {
     isLoggedIn,
     message

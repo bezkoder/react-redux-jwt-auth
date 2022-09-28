@@ -11,11 +11,11 @@ import Home from "./components/home.component";
 import Profile from "./components/profile.component";
 import BoardUser from "./components/board-user.component";
 import BoardModerator from "./components/board-moderator.component";
-import AddTutorial from "./components/add-tutorial.component";
 import BoardAdmin from "./components/board-admin.component";
-import UserService from "../src/services/user.service"
+import AddTutorial from "./components/add-tutorial.component";
 import TutorialsList from "./components/tutorials-list.component";
-import Tutorials from "./components/tutorial.component"
+import UserService from "../src/services/user.service"
+
 
 
 import { logout } from "./actions/auth";
@@ -61,6 +61,13 @@ class App extends Component {
         showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
+
+      UserService.getUsers().then(users => {
+        this.setState({
+          users: users.data
+        });
+
+      })
     }
 
     EventBus.on("logout", () => {
@@ -87,7 +94,7 @@ class App extends Component {
       showAdminBoard, info
     } = this.state;
 
-    console.log(this.state)
+
     return (
       <Router history={history}>
         <div>
@@ -107,11 +114,23 @@ class App extends Component {
               </li>
 
               {showModeratorBoard && (
+
                 <li className="nav-item">
-                  <Link to={"/mod"} className="nav-link">
-                    Moderator Board
+                  <Link to={"/TutorialsList"} className="nav-link">
+                    المراسلات
+                  </Link>
+
+                </li>
+
+              )}
+              {showModeratorBoard && (
+
+                <li className="nav-item">
+                  <Link to={"/AddTutorial"} className="nav-link">
+                    إرسال
                   </Link>
                 </li>
+
               )}
 
               {showAdminBoard && (
@@ -122,13 +141,6 @@ class App extends Component {
                 </li>
               )}
 
-              {currentUser && (
-                <li className="nav-item">
-                  <Link to={"/user"} className="nav-link">
-                    User
-                  </Link>
-                </li>
-              )}
             </div>
 
             {currentUser ? (
@@ -171,6 +183,10 @@ class App extends Component {
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
+              <Route path="/TutorialsList" component={TutorialsList} />
+              <Route path="/AddTutorial" component={() => <AddTutorial users={this.state.users} />} />
+
+
               {/* <Route path="/tutorials" component={Tutorials} /> */}
             </Switch>
           </div>

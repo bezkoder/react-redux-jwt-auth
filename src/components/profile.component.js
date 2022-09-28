@@ -120,6 +120,7 @@ class Profile extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log(state)
   const { user } = state.auth;
   return {
     user,

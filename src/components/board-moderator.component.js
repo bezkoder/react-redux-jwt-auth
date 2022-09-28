@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
+// import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import UserService from "../services/user.service";
 import EventBus from "../common/EventBus";
-import TutorialsList from "./tutorials-list.component";
+// import TutorialsList from "./tutorials-list.component";
 import Docs from "./docs.component"
 import store1 from "../store1";
+// import userService from "../services/user.service";
 
 
 
@@ -48,9 +49,9 @@ export default class BoardModerator extends Component {
     return (
 
 
-      <Provider store={store1}>
-        <Docs />
-      </Provider>
+
+      <Docs />
+
 
 
 

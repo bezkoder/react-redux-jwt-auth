@@ -5,16 +5,21 @@ const initialState = [];
 
 export const createTutorial = createAsyncThunk(
   "tutorials/create",
-  async ({ title, description, docNumb, docDate, sentTo, sentFrom, fileLink, seen }) => {
-    const res = await TutorialDataService.create({ title, description, docNumb, docDate, sentTo, sentFrom, fileLink, seen });
+  async ({
+    title, description, docNumb, docDate, sentTo, sentToId, sentFrom, fileLink, seen }) => {
+    const res = await TutorialDataService.create({
+      title, description, docNumb, docDate, sentTo, sentToId, sentFrom, fileLink, seen
+    });
     return res.data;
   }
 );
 
 export const retrieveTutorials = createAsyncThunk(
   "tutorials/retrieve",
-  async () => {
-    const res = await TutorialDataService.getAll();
+  async ({ data }) => {
+
+    const res = await TutorialDataService.getUser(data.id);
+    console.log(res)
     return res.data;
   }
 );
@@ -26,6 +31,16 @@ export const updateTutorial = createAsyncThunk(
     return res.data;
   }
 );
+
+export const downloadFile = createAsyncThunk(
+  "tutorials/file",
+  async ({ id, data }) => {
+    const res = await TutorialDataService.download(data, id);
+    return res.data;
+  }
+);
+
+
 
 export const deleteTutorial = createAsyncThunk(
   "tutorials/delete",
@@ -76,6 +91,9 @@ const tutorialSlice = createSlice({
       return [];
     },
     [findTutorialsByTitle.fulfilled]: (state, action) => {
+      return [...action.payload];
+    },
+    [downloadFile.fulfilled]: (state, action) => {
       return [...action.payload];
     },
   },

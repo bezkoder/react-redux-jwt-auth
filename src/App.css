@@ -1,7 +1,30 @@
+body {
+  background-color: whitesmoke;
+}
+
 label {
   display: block;
   margin-top: 10px;
+  text-align: right;
+}
+
+input {
   text-align: center;
+}
+
+.box-container {
+  padding: 25px 50px;
+  margin: 50px 150px;
+  border: 1px solid gainsboro;
+  border-radius: 20px;
+  box-shadow: rgba(100, 96, 96, 0.4) 0px 15px 15px;
+  background-color: white;
+}
+
+.flex-group {
+  display: flex;
+  justify-content: space-between;
+
 }
 
 .infos {
@@ -11,6 +34,7 @@ label {
 .navbar {
   font-family: 'oswald';
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+  background-color: white;
 }
 
 .logo-img {
@@ -61,4 +85,8 @@ label {
   display: flex;
   justify-content: space-between;
 
+}
+
+.seen {
+  background-color: gainsboro;
 }

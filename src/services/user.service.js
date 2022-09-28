@@ -21,6 +21,13 @@ class UserService {
     return axios.get(API_URL + "admin", { headers: authHeader() });
   }
 
+  getUsers() {
+    return axios.post(API_URL + "all", { headers: authHeader() })
+      .then((response) => {
+        return response
+      });
+  }
+
   getUserInfo(user) {
     return axios.post(API_URL_USR + "user", { user })
       .then((response) => {

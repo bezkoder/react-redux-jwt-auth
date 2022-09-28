@@ -99,7 +99,7 @@ class Tutorial extends Component {
       .unwrap()
       .then((reponse) => {
         console.log(reponse);
-        
+
         this.setState({ message: "The tutorial was updated successfully!" });
       })
       .catch((e) => {
@@ -125,10 +125,10 @@ class Tutorial extends Component {
       <div>
         {currentTutorial ? (
           <div className="edit-form">
-            <h4>Tutorial</h4>
+            <h4>إضافة مراسلة</h4>
             <form>
               <div className="form-group">
-                <label htmlFor="title">Title</label>
+                <label htmlFor="title">العنوان</label>
                 <input
                   type="text"
                   className="form-control"
@@ -138,7 +138,7 @@ class Tutorial extends Component {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="description">Description</label>
+                <label htmlFor="description">المضمون</label>
                 <input
                   type="text"
                   className="form-control"
