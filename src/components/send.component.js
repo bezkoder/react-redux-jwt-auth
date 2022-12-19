@@ -2,7 +2,7 @@ import React from "react";
 
 import Moment from 'moment/min/moment-with-locales';
 
-const Inbox = (props) => {
+const Send = (props) => {
     Moment.locale('ar-dz')
     const { tutos, setActiveTutorial } = props
 
@@ -17,11 +17,10 @@ const Inbox = (props) => {
     }
     const tu = reversing(tutos)
 
-    // console.log(tu.reverse())
     return (
-        <ul>
-            {
-                tu && tu.map((tuto, index) => (
+        <div>
+            {tu ? (
+                tu.map((tuto, index) => (
 
                     <li
                         className={"list-group-item " +
@@ -31,30 +30,34 @@ const Inbox = (props) => {
                         key={index}
                     >
 
-                        <div className='row wraper'>
+                        <div className='row  wraper'>
                             <div className="col-md-3 sender">
-                                {tuto.sentFrom.username}
+                                {tuto.sentTo}
                             </div>
                             <div className="col-md-2 tit">
                                 {tuto.title}
                             </div>
                             <div className="col-md-5 object">
                                 {tuto.description}
+                                {tuto.published ? (<div className="published">تم الإطلاع</div>
+                                ) : (<div className="unpublished">في الإنتظار</div>)}
                             </div>
                             <div className="col-md-2 time" >
                                 {Moment(tuto.createdAt).startOf('min').fromNow()}
                             </div>
-
-
-
-
                         </div>
+
+
                     </li>
 
                 ))
-            }
+            ) : (""
+                // <li className={"list-group-item "}> لا يوجد رسائل صادرة</li>
+            )
 
-        </ul>
+            }
+        </div>
+
     )
 
 
@@ -62,4 +65,4 @@ const Inbox = (props) => {
 
 
 
-export default Inbox
+export default Send

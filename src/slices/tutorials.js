@@ -33,9 +33,11 @@ export const updateTutorial = createAsyncThunk(
 );
 
 export const downloadFile = createAsyncThunk(
+
   "tutorials/file",
-  async ({ id, data }) => {
-    const res = await TutorialDataService.download(data, id);
+  async (id, link) => {
+    console.log(id, link)
+    const res = await TutorialDataService.download(id, link);
     return res.data;
   }
 );
@@ -60,8 +62,8 @@ export const deleteAllTutorials = createAsyncThunk(
 
 export const findTutorialsByTitle = createAsyncThunk(
   "tutorials/findByTitle",
-  async ({ title }) => {
-    const res = await TutorialDataService.findByTitle(title);
+  async ({ title, id }) => {
+    const res = await TutorialDataService.findByTitle(title, id);
     return res.data;
   }
 );
@@ -94,7 +96,7 @@ const tutorialSlice = createSlice({
       return [...action.payload];
     },
     [downloadFile.fulfilled]: (state, action) => {
-      return [...action.payload];
+      return [];
     },
   },
 });

@@ -2,7 +2,7 @@ import React from "react";
 
 import Moment from 'moment/min/moment-with-locales';
 
-const Inbox = (props) => {
+const Search = (props) => {
     Moment.locale('ar-dz')
     const { tutos, setActiveTutorial } = props
 
@@ -19,10 +19,9 @@ const Inbox = (props) => {
 
     // console.log(tu.reverse())
     return (
-        <ul>
+        <div>
             {
                 tu && tu.map((tuto, index) => (
-
                     <li
                         className={"list-group-item " +
                             (tuto.seen ? "seen" : "")
@@ -30,7 +29,6 @@ const Inbox = (props) => {
                         onClick={() => setActiveTutorial(tuto, index)}
                         key={index}
                     >
-
                         <div className='row wraper'>
                             <div className="col-md-3 sender">
                                 {tuto.sentFrom.username}
@@ -47,14 +45,12 @@ const Inbox = (props) => {
 
 
 
-
                         </div>
                     </li>
-
                 ))
             }
+        </div>
 
-        </ul>
     )
 
 
@@ -62,4 +58,4 @@ const Inbox = (props) => {
 
 
 
-export default Inbox
+export default Search

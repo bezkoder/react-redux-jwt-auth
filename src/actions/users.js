@@ -9,7 +9,7 @@ export const getListUsers = () => (dispatch) => {
         (data) => {
             dispatch({
                 type: LIST_USERS,
-                payload: { users: data },
+                payload: { users: data.data.users },
             });
 
             return Promise.resolve();

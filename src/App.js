@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Router, Switch, Route, Link } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-
 import Login from "./components/login.component";
 import Register from "./components/register.component";
 import Home from "./components/home.component";
@@ -14,16 +12,13 @@ import BoardModerator from "./components/board-moderator.component";
 import BoardAdmin from "./components/board-admin.component";
 import AddTutorial from "./components/add-tutorial.component";
 import TutorialsList from "./components/tutorials-list.component";
+import TutotialDetails from "./components/tutorial.detail.component"
+import MenuComponent from "./components/menu.component";
 import UserService from "../src/services/user.service"
-
-
-
+import AuthVerify from "./common/auth-verify";
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
-
 import { history } from './helpers/history';
-
-// import AuthVerify from "./common/auth-verify";
 import EventBus from "./common/EventBus";
 import logo from "./assets/logo.png"
 
@@ -46,6 +41,8 @@ class App extends Component {
   componentDidMount() {
     const user = this.props.user;
 
+
+
     if (user) {
       UserService.getUserInfo(user).then((info) => {
         if (info) {
@@ -62,12 +59,7 @@ class App extends Component {
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
 
-      UserService.getUsers().then(users => {
-        this.setState({
-          users: users.data
-        });
 
-      })
     }
 
     EventBus.on("logout", () => {
@@ -91,114 +83,106 @@ class App extends Component {
   render() {
     const { currentUser,
       showModeratorBoard,
-      showAdminBoard, info
+      info
     } = this.state;
-
+    console.log(currentUser)
 
     return (
       <Router history={history}>
         <div>
-          <nav className="navbar navbar-expand white ">
-            <div className="logo-img">
-              <img src={logo} className="logo" alt="" />
-            </div>
-
-            <Link to={"/"} className="navbar-brand">
-              منصة المستخدمين
-            </Link>
-            <div className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link to={"/home"} className="nav-link">
-                  الرئيسية
+          {/* navbar start section */}
+          <div className="header">
+            <div class="container">
+              <div className="logo-section">
+                <img src={logo} className="logo" alt="" />
+                <Link to={"/"} className="NameLogo">
+                  منصة البريد الداخلي
                 </Link>
-              </li>
-
-              {showModeratorBoard && (
-
+              </div>
+              <ul class="main-nav">
                 <li className="nav-item">
-                  <Link to={"/TutorialsList"} className="nav-link">
-                    المراسلات
-                  </Link>
-
-                </li>
-
-              )}
-              {showModeratorBoard && (
-
-                <li className="nav-item">
-                  <Link to={"/AddTutorial"} className="nav-link">
-                    إرسال
+                  <Link to={"/home"} className="nav-link">
+                    الرئيسية
                   </Link>
                 </li>
+                {showModeratorBoard && (
+                  <li className="nav-item">
+                    <Link to={"/TutorialsList"} className="nav-link">
+                      المراسلات
+                      <i class="material-icons">article</i></Link>
+                  </li>
+                )}
+                {showModeratorBoard && (
+                  <li className="nav-item">
+                    <Link to={"/AddTutorial"} className="nav-link">
+                      مراسلة جديدة
+                      <i class="material-icons">assignment_add</i></Link>
 
-              )}
+                  </li>
+                )}
+                {currentUser ? (
+                  <div className="nav-item  ">
+                    <li id="menu">
+                      <i class="material-icons md-48 ">account_circle</i>
+                      <MenuComponent currentUser={currentUser} logOut={this.logOut} />
+                    </li>
 
-              {showAdminBoard && (
-                <li className="nav-item">
-                  <Link to={"/admin"} className="nav-link">
-                    Admin Board
-                  </Link>
-                </li>
-              )}
+                  </div>
 
+
+
+
+                ) : (
+                  <li className="nav-item">
+                    <Link to={"/login"} className="nav-link">
+                      الدخول
+                      <i class="material-icons">login</i></Link>
+                  </li>
+                )}
+                {currentUser ? (
+                  ""
+                  // <span className="nav-item">
+                  //   <a href="/login" className="nav-link" onClick={this.logOut}>
+                  //     <i class="material-icons">logout</i></a>
+                  // </span>
+
+                ) : (
+                  <li className="nav-item">
+                    <Link to={"/register"} className="nav-link">
+                      التسجيل
+                      <i class="material-icons">app_registration</i></Link>
+                  </li>
+                )}
+              </ul>
             </div>
+          </div>
+          {/* navbar end section */}
 
-            {currentUser ? (
-              <div className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <Link to={"/profile"} className="nav-link">
-                    البطاقة الشخصية
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <a href="/login" className="nav-link" onClick={this.logOut}>
-                    الخروج
-                  </a>
-                </li>
-              </div>
-            ) : (
-              <div className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <Link to={"/login"} className="nav-link">
-                    دخول
-                  </Link>
-                </li>
 
-                <li className="nav-item">
-                  <Link to={"/register"} className="nav-link">
-                    التسجيل
-                  </Link>
-                </li>
-              </div>
-            )}
-          </nav>
 
           <div className="container mt-3">
             <Switch>
               <Route exact path={["/", "/home"]} component={Home} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
-              {info &&
-                <Route exact path="/profile" component={Profile} />}
+              {info && <Route exact path="/profile" component={Profile} />}
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
               <Route path="/TutorialsList" component={TutorialsList} />
               <Route path="/AddTutorial" component={() => <AddTutorial users={this.state.users} />} />
-
-
-              {/* <Route path="/tutorials" component={Tutorials} /> */}
             </Switch>
           </div>
 
-          {/* <AuthVerify logOut={this.logOut}/> */}
+          <AuthVerify logOut={this.logOut} />
         </div>
-      </Router>
+      </Router >
     );
   }
 }
 
 function mapStateToProps(state) {
+  console.log(state)
   const { user } = state.auth;
   return {
     user

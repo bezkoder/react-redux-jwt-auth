@@ -2,8 +2,12 @@ import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 import { createTutorial } from "../slices/tutorials";
+import { getListUsers } from '../actions/users'
 import axios from 'axios';
+import $ from "jquery";
 const user = JSON.parse(localStorage.getItem("user"))
+
+
 class AddTutorial extends Component {
 
   constructor(props) {
@@ -22,7 +26,7 @@ class AddTutorial extends Component {
       docDate: "",
       sentTo: "",
       sentToId: 0,
-      sentFrom: { username: user.username, id: user.id },
+      sentFrom: { username: user.nom, id: user.id },
       fileLink: "",
       seen: false,
       description: "",
@@ -30,20 +34,36 @@ class AddTutorial extends Component {
       submitted: false,
     };
   }
+  componentWillMount() {
+    this.props.getListUsers()
 
+  }
+  componentDidMount() {
+    // console.log($('#sentTo'))
+    // $('#sentTo').multiSelect('select', String | Array)
+
+    // $(document).ready(function () {
+    //   $('#sentTo');
+    // });
+  }
 
   onChangeValue(e) {
     this.setState({
       [e.target.id]: e.target.value,
     });
+    console.log(this.state)
   }
   onChangeSentValue(e) {
     const IdReg = new RegExp(/\d+$/, 'i')
     const nameReg = new RegExp(/\D*/, 'i')
+    const send = nameReg.exec(e.target.value)[0]
+    const sendId = IdReg.exec(e.target.value)[0]
     this.setState({
-      [e.target.id]: nameReg.exec(e.target.value)[0],
-      sentToId: IdReg.exec(e.target.value)[0]
+      sentTo: send,
+      sentToId: sendId
     });
+
+
   }
   onFileChange(e) {
     this.setState({ fileLink: e.target.files[0] })
@@ -52,16 +72,12 @@ class AddTutorial extends Component {
     e.preventDefault()
     const formData = new FormData()
     formData.append("file", this.state.fileLink)
-    // for (var pair of formData.entries()) {
-    //   console.log(pair[0] + ', ' + pair[1]);
-    // }
-    // console.log(formData)
+
     axios.post("http://localhost:8083/api/tutorials/upload", formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     }).then(res => {
-      console.log(res)
     })
   }
 
@@ -109,118 +125,129 @@ class AddTutorial extends Component {
   }
 
   render() {
-    const { users } = this.props.users
+    const { users } = this.props
 
     return (
 
-      <div className="submit-form">
-        {this.state.submitted ? (
-          <Redirect to="/TutorialsList" />
-        ) : (
-          <div className="box-container">
-            <div className="form-group">
-              <div className="flex-group">
-                <div>
-                  <label htmlFor="title">نوع المراسلة</label>
-                  <select
-                    name="title"
-                    id="title"
-                    className="form-control"
-                    required
-                    value={this.state.title}
-                    onChange={this.onChangeValue}>
-                    <option value=""></option>
-                    <option value="جدول إرسال">جدول إرسال</option>
-                    <option value="مراسلة">مراسلة</option>
-                  </select>
-                </div>
 
-                <div>
-                  <label htmlFor="title">التاريخ</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="docDate"
-                    required
-                    value={this.state.docDate}
-                    onChange={this.onChangeValue}
-                    name="docDate"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="title">رقم المراسلة</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="docNumb"
-                    required
-                    value={this.state.docNumb}
-                    onChange={this.onChangeValue}
-                    name="docNumb"
-                    style={{ "width": "100px" }}
-                  />
-                </div>
+      <div className="submit-form">
+        <div className="container">
+          {this.state.submitted ? (
+            <Redirect to="/TutorialsList" />
+          ) : (
+            <div className="box">
+              <div className="title">
+                <span >مراسلة جديدة</span>
               </div>
 
+              <div className="form-group">
+                <div className="flex-group">
+                  <div>
+                    <label htmlFor="title">نوع المراسلة</label>
+                    <select
+                      name="title"
+                      id="title"
+                      className="form-control"
+                      required
+                      value={this.state.title}
+                      onChange={this.onChangeValue}>
+                      <option value=""></option>
+                      <option value="جدول إرسال">جدول إرسال</option>
+                      <option value="مراسلة">مراسلة</option>
+                    </select>
+                  </div>
 
-            </div>
-            <div className="form-group">
+                  <div>
+                    <label htmlFor="title">التاريخ</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="docDate"
+                      required
+                      value={this.state.docDate}
+                      onChange={this.onChangeValue}
+                      name="docDate"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="title">رقم المراسلة</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="docNumb"
+                      required
+                      value={this.state.docNumb}
+                      onChange={this.onChangeValue}
+                      name="docNumb"
+                      style={{ "width": "100px" }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="sentTo">الجهة المرسل إليها</label>
+                <select
+                  name="sentTo"
+                  id="sentTo"
+                  className="form-control"
+                  required
+                  // multiple="multiple"
+                  value={this.state.sentTo}
+                  onChange={this.onChangeSentValue}>
+                  <option value=""></option>
+                  {
+                    users && users.map((user, index) => {
+                      return (
+                        <option key={index} value={user.nom + user.id}>{user.nom}</option>
+                      )
 
-              <label htmlFor="sentTo">الجهة المرسل إليها</label>
-              <select
-                name="sentTo"
-                id="sentTo"
-                className="form-control"
-                required
-                value={this.state.sentTo}
-                onChange={this.onChangeSentValue}>
-                <option value=""></option>
-                {
-                  users.map((user, index) => {
-                    return <option key={index} value={user.username + user.id}>{user.username}</option>
-                  })
-                }
-              </select>
-            </div>
+                    })
+                  }
+                </select>
+              </div>
 
-            <div className="form-group">
-              <label htmlFor="description">المضمون</label>
-              <input
-                type="text"
-                className="form-control"
-                id="description"
-                required
-                value={this.state.description}
-                onChange={this.onChangeValue}
-                name="description"
-              />
-            </div>
+              <div className="form-group">
+                <label htmlFor="description">الموضوع</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="description"
+                  required
 
-            <div className="form-group">
-              <label htmlFor="description">تحميل المراسلة</label>
-              <input
-                type="file"
-                className="form-control"
-                id="fileLink"
-                required
-                // value={this.state.fileLink}
-                onChange={this.onFileChange}
-                name="fileLink"
-              />
-            </div>
-            <div className="form-group">
-              <button className="btn btn-primary" type="submit"
-                onClick={this.onLoad}>Upload</button>
-            </div>
+                  value={this.state.description}
+                  onChange={this.onChangeValue}
+                  name="description"
+                />
+              </div>
 
-            <button onClick={this.saveTutorial} className="btn btn-success">
-              إرسال
-            </button>
-          </div>
-        )}
-      </div>
+              <div className="form-group">
+                <label htmlFor="description">تحميل المراسلة</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  id="fileLink"
+                  required
+                  onChange={this.onFileChange}
+                  name="fileLink"
+                />
+              </div>
+
+              <button onClick={this.saveTutorial} >
+                إرسال
+              </button>
+            </div>
+          )}
+        </div>
+
+      </div >
     );
   }
 }
+function mapStateToProps(state) {
+  const { users } = state.users.users ? state.users.users : "";
+  return {
+    users
+  };
+}
 
-export default connect(null, { createTutorial })(AddTutorial);
+export default connect(mapStateToProps, { createTutorial, getListUsers })(AddTutorial);

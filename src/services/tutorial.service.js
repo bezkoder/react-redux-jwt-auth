@@ -1,9 +1,12 @@
 import http from "../http-common";
 const formData = new FormData()
 class TutorialDataService {
-  download(id, data) {
-    console.log(id, data)
-    return http.get(`/tutorials/file?name=${data}&id=${id}`)
+
+  download(id, link) {
+    console.log(id, link)
+    return http.get(`/tutorials/file?name=${link}&id=${id}`, {
+      responseType: 'blob',
+    })
   }
 
   getAll(data) {
@@ -11,7 +14,7 @@ class TutorialDataService {
     return http.get("/tutorials", data);
   }
   getUser(id) {
-    return http.get(`/tutorials?title=${id}`);
+    return http.get(`/tutorials/usertutrial?title=${id}`);
   }
 
   get(id) {
@@ -41,7 +44,15 @@ class TutorialDataService {
   }
 
   update(id, data) {
-    return http.put(`/tutorials/${id}`, data);
+    console.log(id, data)
+
+    return data && http.put(`/tutorials/${id}`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }
+    );
   }
 
   delete(id) {
@@ -52,8 +63,8 @@ class TutorialDataService {
     return http.delete(`/tutorials`);
   }
 
-  findByTitle(title) {
-    return http.get(`/tutorials?title=${title}`);
+  findByTitle(title, id) {
+    return http.get(`/tutorials?title=${title}&id=${id}`);
   }
 }
 
