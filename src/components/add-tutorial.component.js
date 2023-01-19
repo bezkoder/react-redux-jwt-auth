@@ -39,30 +39,27 @@ class AddTutorial extends Component {
 
   }
   componentDidMount() {
-    // console.log($('#sentTo'))
-    // $('#sentTo').multiSelect('select', String | Array)
 
-    // $(document).ready(function () {
-    //   $('#sentTo');
-    // });
   }
 
   onChangeValue(e) {
     this.setState({
       [e.target.id]: e.target.value,
     });
-    console.log(this.state)
+    // console.log(this.state)
   }
-  onChangeSentValue(e) {
+  onChangeSentValue(e) {  
+    const myUsers= this.props.users
     const IdReg = new RegExp(/\d+$/, 'i')
     const nameReg = new RegExp(/\D*/, 'i')
     const send = nameReg.exec(e.target.value)[0]
-    const sendId = IdReg.exec(e.target.value)[0]
+    const [sendId] = myUsers.filter(user=> user.nom===send)
+
     this.setState({
       sentTo: send,
-      sentToId: sendId
+      sentToId: sendId.id
     });
-
+    // console.log(this.state.sentToId)
 
   }
   onFileChange(e) {
@@ -77,7 +74,6 @@ class AddTutorial extends Component {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
-    }).then(res => {
     })
   }
 
@@ -88,18 +84,21 @@ class AddTutorial extends Component {
       .createTutorial({ title, description, docNumb, docDate, sentTo, sentToId, sentFrom, fileLink, seen })
       .unwrap()
       .then((data) => {
+        
+        console.log(this.state)
+
         this.setState({
-          id: data.id,
-          title: data.title,
-          docNumb: data.docNumb,
-          docDate: data.docDate,
-          sentTo: data.sentTo,
-          sentToId: data.sentToId,
-          sentFrom: data.sentFrom,
-          fileLink: data.fileLink,
+          // id: data.id,
+          // title: data.title,
+          // docNumb: data.docNumb,
+          // docDate: data.docDate,
+          // sentTo: data.sentTo,
+          // sentToId: data.sentToId,
+          // sentFrom: data.sentFrom,
+          // fileLink: data.fileLink,
           seen: false,
-          description: data.description,
-          published: data.published,
+          // description: data.description,
+          // published: data.published,
           submitted: true,
         });
       })
@@ -133,9 +132,10 @@ class AddTutorial extends Component {
       <div className="submit-form">
         <div className="container">
           {this.state.submitted ? (
-            <Redirect to="/TutorialsList" />
+            // <Redirect to="/TutorialsList" />
+            console.log(this.state, "heloooooo")
           ) : (
-            <div className="box">
+            <form className="box">
               <div className="title">
                 <span >مراسلة جديدة</span>
               </div>
@@ -189,18 +189,17 @@ class AddTutorial extends Component {
                 <select
                   name="sentTo"
                   id="sentTo"
+                  type='text'
                   className="form-control"
                   required
-                  // multiple="multiple"
                   value={this.state.sentTo}
                   onChange={this.onChangeSentValue}>
-                  <option value=""></option>
+                  <option value="" disabled>يرجى تحديد الجهة المرسل إليها</option>
                   {
                     users && users.map((user, index) => {
                       return (
-                        <option key={index} value={user.nom + user.id}>{user.nom}</option>
+                        <option key={index} value={user.nom}>{user.nom}</option>
                       )
-
                     })
                   }
                 </select>
@@ -213,7 +212,6 @@ class AddTutorial extends Component {
                   className="form-control"
                   id="description"
                   required
-
                   value={this.state.description}
                   onChange={this.onChangeValue}
                   name="description"
@@ -232,10 +230,10 @@ class AddTutorial extends Component {
                 />
               </div>
 
-              <button onClick={this.saveTutorial} >
+              <button type="submit"onClick={this.saveTutorial} >
                 إرسال
               </button>
-            </div>
+            </form>
           )}
         </div>
 

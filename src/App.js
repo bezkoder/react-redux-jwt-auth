@@ -100,11 +100,11 @@ class App extends Component {
                 </Link>
               </div>
               <ul class="main-nav">
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <Link to={"/home"} className="nav-link">
                     الرئيسية
                   </Link>
-                </li>
+                </li> */}
                 {showModeratorBoard && (
                   <li className="nav-item">
                     <Link to={"/TutorialsList"} className="nav-link">
@@ -162,8 +162,8 @@ class App extends Component {
 
           <div className="container mt-3">
             <Switch>
-              <Route exact path={["/", "/home"]} component={Home} />
-              <Route exact path="/login" component={Login} />
+              <Route exact path="/home" component={Home} />
+              <Route exact path={["/", "/login"]} component={Login} />
               <Route exact path="/register" component={Register} />
               {info && <Route exact path="/profile" component={Profile} />}
               <Route path="/user" component={BoardUser} />

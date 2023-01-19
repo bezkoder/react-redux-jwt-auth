@@ -94,9 +94,9 @@ class TutorialsList extends Component {
         }
       })
     }
-    if (unSee !== 0) {
+    
       this.onTitleChange(unSee)
-    }
+    
     this.setState({ Unseen: unSee })
     console.log(unSee)
   }
@@ -104,16 +104,19 @@ class TutorialsList extends Component {
   onTitleChange(unSeen) {
     const title = document.title
     const myTitle = title;
+    let myInterval=0
     let myNewTitle = ` مـنـصـة الـبـريـد الداخـلـي (  ${unSeen} ) `
-    if (unSeen !== 0) {
-      document.title = myNewTitle
-      setInterval(() => {
-        document.title === myTitle ? document.title = myNewTitle : document.title = myTitle
-      }, 2 * 1000);
-
-
-      console.log(myNewTitle)
-    }
+    // if (unSeen != 0) {
+    //   document.title = myNewTitle
+    //   myInterval=setInterval(() => {
+    //     document.title === myTitle ? document.title = myNewTitle : document.title = myTitle
+    //   }, 2 * 1000);
+    //   console.log(myInterval)
+    // }else{
+    //   clearInterval(myInterval)
+    //   console.log("hello")
+    //   document.title=title
+    // }
 
 
 
@@ -236,7 +239,7 @@ class TutorialsList extends Component {
 
               </div>
 
-              <div className="row">
+              <div className="row cont">
 
                 <div className=" col-md-9 list-content">
                   {currentIndex !== -1 ? (
@@ -248,7 +251,7 @@ class TutorialsList extends Component {
 
                   ) : (
 
-                    <div className="table">
+                   
                       <ul className="list-group">
                         <div className='row titles'>
                           <div className="col-md-2 title" >
@@ -291,7 +294,7 @@ class TutorialsList extends Component {
                             ))}
                         </div>
                       </ul>
-                    </div>
+                    
                   )}
 
                 </div>

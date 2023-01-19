@@ -40,6 +40,7 @@ label {
   display: block;
   margin-top: 10px;
   text-align: center;
+  font-weight:bold;
 }
 
 input {
@@ -267,8 +268,8 @@ i {
 }
 
 
-
 /* End Navigation */
+
 /*Start login  */
 .login {
   max-width: 100%;
@@ -291,8 +292,8 @@ i {
   border-radius: 25px;
   z-index: 1;
   left: 50%;
-  top: calc(50vh - 72px);
-  transform: translate(-50%, -50%);
+  top: 50px;
+  transform: translate(-50%, 0);
 }
 
 
@@ -320,8 +321,8 @@ i {
   border-radius: 25px;
   z-index: 1;
   left: 50%;
-  top: calc(50vh - 50px);
-  transform: translate(-50%, -50%);
+  top: 50px;
+  transform: translate(-50%, 0);
 }
 
 
@@ -332,9 +333,9 @@ i {
 .submit-form .container {
   max-width: 700px;
   position: absolute;
-  top: calc(50vh + 30px);
+  top: 100px;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0);
 }
 
 .box {
@@ -347,7 +348,10 @@ i {
   border-radius: 25px;
   z-index: 1;
 }
-
+.form-group #sentTo {
+  text-align: center;
+  height: 44px;
+}
 button {
   background-color: white;
   display: block;
@@ -382,14 +386,12 @@ span {
 /* End add_tutorial_component  */
 
 /* Start List_tutorial_component */
-.list {
-  height: 100%;
-}
 
 
 .list .content {
   padding: 20px 5px 10px;
   position: relative;
+  height: calc(100vh - 102px);
   box-shadow: 0 12px 20px 0 rgb(0 0 0 / 13%), 0 2px 4px 0 rgb(0 0 0 / 12%);
   transition: var(--main-transition);
   background: white;
@@ -397,7 +399,17 @@ span {
   border-radius: 25px;
   z-index: 1;
 }
+.list .cont {
+  height:calc(100% - 70px)  ;
+}
 
+.list .cont .list-content,
+.list .cont .nav-content{
+  height: 100%;
+}
+.list .cont .list-content .list-group{
+  height: 100%;
+}
 .list .content .title {
   margin-bottom: 25px;
 }
@@ -418,11 +430,12 @@ span {
 
 .list .content .tuto-container {
   direction: rtl;
-  height: calc(100vh - 320px);
   overflow: auto;
+  height: 100%;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 }
+
 
 .list .content .tuto-container::-webkit-scrollbar {
 
@@ -549,6 +562,9 @@ span {
 
 /* End inbox_component */
 /* Start details_component */
+.detail, .details{
+  height: 100%;
+}
 .details .titles {
   position: relative;
 
@@ -577,6 +593,10 @@ span {
 
 .details .details-content {
   background-color: var(--section-background-2);
+  height:calc(100% - 60px) ;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 
 }
 
@@ -627,6 +647,13 @@ span {
   text-align: right;
 }
 
+.details .details-content a{
+
+  margin-top: auto;
+  justify-self: flex-end;
+  align-self: center;
+  padding: 20px;
+}
 /* End details_component */
 /* Start sideBar */
 .nav-content {
@@ -634,6 +661,7 @@ span {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  
 }
 
 .nav-content ul {

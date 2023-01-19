@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { onDownload } from "../actions/file";
 import Moment from 'moment/min/moment-with-locales';
 import http from "../http-common";
+const user = JSON.parse(localStorage.getItem("user"));
 
 class TutorialDetails extends Component {
     constructor(props) {
@@ -13,6 +14,11 @@ class TutorialDetails extends Component {
 
         http.get(`/tutorials/file?name=${data}&id=${id}`, {
             responseType: 'blob',
+            headers:{
+                "x-access-token": user.accessToken 
+            }
+            
+
         }).then(resp => {
             const url = window.URL.createObjectURL(new Blob([resp.data]));
             const link = document.getElementsByClassName('down')
@@ -31,7 +37,7 @@ class TutorialDetails extends Component {
         const { currentTutorial, user, getBack, inbox, } = this.props;
 
         return (
-            <div>
+            <div className='detail'>
                 {currentTutorial ? (
                     <div className="details">
 
@@ -81,12 +87,11 @@ class TutorialDetails extends Component {
                                 </div>
                             </div>
 
-                            {currentTutorial.fileLink ? (
+                            {/* {currentTutorial.fileLink ? ( */}
                                 <a href="#download" type="button" className="down"
-                                    onClick={this.Download(user.id, currentTutorial.fileLink)}
-                                >
+                                    onClick={this.Download(user.id, currentTutorial.fileLink)}>
                                     Download {" / "} {currentTutorial.fileLink}</a>
-                            ) : ("")}
+                            {/* ) : (console.log("hello"))} */}
                             {/* <ViewerComponent id="file-viewer" /> */}
                         </div>
 
